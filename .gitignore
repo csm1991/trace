@@ -1,0 +1,21 @@
+# Maven target directories
+target/
+
+# IDE specific files
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Build artifacts
+**/target/
+**/build/
+
+# Log files
+*.log
+
+# Dependency directories
+**/node_modules/
+
+# System Files
+.DS_Store
