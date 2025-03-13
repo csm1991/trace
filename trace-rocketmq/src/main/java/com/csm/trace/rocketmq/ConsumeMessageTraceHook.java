@@ -2,6 +2,7 @@ package com.csm.trace.rocketmq;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.csm.trace.core.TraceIdContext;
+import org.apache.rocketmq.client.hook.ConsumeMessageContext;
 import org.apache.rocketmq.client.hook.ConsumeMessageHook;
 import org.apache.rocketmq.common.message.MessageExt;
 
@@ -17,9 +18,9 @@ public class ConsumeMessageTraceHook implements ConsumeMessageHook {
     }
 
     @Override
-    public void consumeMessageBefore(ConsumeMessageContext context) {
-        if (context != null && context.getMsgList() != null) {
-            for (MessageExt message : context.getMsgList()) {
+    public void consumeMessageBefore(ConsumeMessageContext consumeMessageContext) {
+        if (consumeMessageContext != null && consumeMessageContext.getMsgList() != null) {
+            for (MessageExt message : consumeMessageContext.getMsgList()) {
                 String traceId = message.getUserProperty(TRACE_KEY);
                 if (traceId != null && !traceId.isEmpty()) {
                     TraceIdContext.setTraceId(traceId);
