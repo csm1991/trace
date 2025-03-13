@@ -9,12 +9,11 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 public class TraceGatewayFilter implements GatewayFilter, Ordered {
-    private static final String TRACE_HEADER = "X-Trace-ID";
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
-        String traceId = request.getHeaders().getFirst(TRACE_HEADER);
+        String traceId = request.getHeaders().getFirst(TraceIdContext.TRACE_HEADER_KEY);
 
         if (traceId == null || traceId.isEmpty()) {
             traceId = TraceIdContext.generateTraceId();
@@ -23,7 +22,7 @@ public class TraceGatewayFilter implements GatewayFilter, Ordered {
         TraceIdContext.setTraceId(traceId);
 
         ServerHttpRequest modifiedRequest = request.mutate()
-                .header(TRACE_HEADER, traceId)
+                .header(TraceIdContext.TRACE_HEADER_KEY, traceId)
                 .build();
 
         return chain.filter(exchange.mutate().request(modifiedRequest).build())

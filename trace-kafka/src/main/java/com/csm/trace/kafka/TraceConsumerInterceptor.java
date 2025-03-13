@@ -8,12 +8,11 @@ import org.apache.kafka.common.TopicPartition;
 import java.util.Map;
 
 public class TraceConsumerInterceptor implements ConsumerInterceptor<String, String> {
-    private static final String TRACE_ID_HEADER = "X-Trace-ID";
 
     @Override
     public ConsumerRecords<String, String> onConsume(ConsumerRecords<String, String> records) {
         records.forEach(record -> {
-            record.headers().headers(TRACE_ID_HEADER).forEach(header -> {
+            record.headers().headers(TraceIdContext.TRACE_HEADER_KEY).forEach(header -> {
                 String traceId = new String(header.value());
                 TraceIdContext.setTraceId(traceId);
             });

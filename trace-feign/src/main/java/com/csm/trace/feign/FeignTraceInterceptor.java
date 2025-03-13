@@ -5,10 +5,9 @@ import feign.RequestInterceptor;
 import feign.RequestTemplate;
 
 public class FeignTraceInterceptor implements RequestInterceptor {
-    private static final String TRACE_HEADER = "X-Trace-ID";
 
     @Override
     public void apply(RequestTemplate template) {
-        template.header(TRACE_HEADER, TraceIdContext.getTraceId());
+        template.header(TraceIdContext.TRACE_HEADER_KEY, TraceIdContext.getTraceId());
     }
 }

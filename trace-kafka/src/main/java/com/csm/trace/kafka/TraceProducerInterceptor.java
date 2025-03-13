@@ -7,12 +7,11 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import java.util.Map;
 
 public class TraceProducerInterceptor implements ProducerInterceptor<String, String> {
-    private static final String TRACE_ID_HEADER = "X-Trace-ID";
 
     @Override
     public ProducerRecord<String, String> onSend(ProducerRecord<String, String> record) {
         String traceId = TraceIdContext.getTraceId();
-        record.headers().add(TRACE_ID_HEADER, traceId.getBytes());
+        record.headers().add(TraceIdContext.TRACE_HEADER_KEY, traceId.getBytes());
         return record;
     }
 
