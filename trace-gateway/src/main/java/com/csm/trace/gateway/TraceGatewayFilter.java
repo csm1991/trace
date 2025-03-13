@@ -8,6 +8,13 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+/**
+ * Gateway过滤器，用于设置请求头中的traceId
+ *
+ * @author Simon Cai
+ * @version 1.0
+ * @since 2025-03-14
+ */
 public class TraceGatewayFilter implements GatewayFilter, Ordered {
 
     @Override

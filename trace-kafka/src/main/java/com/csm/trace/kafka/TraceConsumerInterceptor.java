@@ -7,6 +7,13 @@ import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 import java.util.Map;
 
+/**
+ * 消费者拦截器，用于设置traceId
+ *
+ * @author Simon Cai
+ * @version 1.0
+ * @since 2025-03-14
+ */
 public class TraceConsumerInterceptor implements ConsumerInterceptor<String, String> {
 
     @Override

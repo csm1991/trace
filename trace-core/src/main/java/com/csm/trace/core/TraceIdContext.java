@@ -4,6 +4,13 @@ import org.slf4j.MDC;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import java.util.UUID;
 
+/**
+ * 跟踪ID上下文管理类
+ * 
+ * @author Simon Cai
+ * @version 1.0
+ * @since 2025-03-14
+ */
 public class TraceIdContext {
 
     public static final String TRACE_HEADER_KEY = "X-Trace-ID";

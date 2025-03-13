@@ -6,6 +6,13 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import java.util.Map;
 
+/**
+ * Kafka生产者拦截器，用于向消息中添加TraceId
+ *
+ * @author Simon Cai
+ * @version 1.0
+ * @since 2025-03-14
+ */
 public class TraceProducerInterceptor implements ProducerInterceptor<String, String> {
 
     @Override
