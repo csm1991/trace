@@ -2,11 +2,16 @@ package com.csm.trace.log.service;
 
 import com.csm.trace.log.config.LogProperties;
 import com.csm.trace.log.util.LogUtil;
+import com.csm.trace.log.util.ObjectMaskUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
+
+import java.lang.reflect.Array;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * 服务层方法执行日志切面
@@ -18,33 +23,38 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @Slf4j
-public class LoggingAspect {
+public class ServiceLoggingAspect {
 
     private final LogUtil logUtil;
     private final LogProperties logProperties;
 
-    public LoggingAspect(LogUtil logUtil, LogProperties logProperties) {
+    public ServiceLoggingAspect(LogUtil logUtil, LogProperties logProperties) {
         this.logUtil = logUtil;
         this.logProperties = logProperties;
     }
-    
+
     @Around("@within(org.springframework.stereotype.Service) || @annotation(org.springframework.stereotype.Service)")
     public Object logMethodExecution(ProceedingJoinPoint joinPoint) throws Throwable {
         String methodName = joinPoint.getSignature().toShortString();
         Object[] args = joinPoint.getArgs();
-        
+
+        // 处理入参集合屏蔽
+        Object[] maskedArgs = ObjectMaskUtils.maskCollections(args, logProperties.getService().getInputCollectionMask());
+
         long startTime = System.currentTimeMillis();
         try {
-            logUtil.log("Method {} called with arguments: {}", methodName, args);
-            
+            logUtil.log(logProperties.getService().getInputLevel(), "Method {} called with arguments: {}", methodName, maskedArgs);
+
             Object result = joinPoint.proceed();
             long executionTime = System.currentTimeMillis() - startTime;
-            
-            long threshold = logProperties.getServiceWarnThreshold();
+
+            // 处理出参集合屏蔽
+            Object maskedResult = ObjectMaskUtils.maskCollections(result, logProperties.getService().getOutputCollectionMask());
+            logUtil.log(logProperties.getService().getExecutionLevel(), "Method {} executed in {}ms. Result: {}", methodName, executionTime, maskedResult);
+
+            long threshold = logProperties.getService().getThreshold();
             if (executionTime > threshold) {
-                logUtil.log("Method {} executed in {}ms (exceeds threshold {}ms). Result: {}", methodName, executionTime, threshold, result);
-            } else {
-                logUtil.log("Method {} executed in {}ms. Result: {}", methodName, executionTime, result);
+                logUtil.log(logProperties.getService().getTimeoutLevel(), "Method {} executed in {}ms (exceeds threshold {}ms). Result: {}", methodName, executionTime, threshold, maskedResult);
             }
             return result;
         } catch (Throwable e) {

@@ -15,26 +15,9 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class LogUtil {
-
-    @Value("${trace.log.level:INFO}")
-    private String logLevel;
-
-    private Level resolvedLevel;
-
-    public Level getLogLevel() {
-        if (resolvedLevel == null) {
-            try {
-                resolvedLevel = Level.valueOf(logLevel.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                log.warn("Invalid log level {} detected, defaulting to INFO", logLevel);
-                resolvedLevel = Level.INFO;
-            }
-        }
-        return resolvedLevel;
-    }
-
-    public void log(String message, Object... args) {
-        switch (getLogLevel()) {
+    
+    public void log(String level, String message, Object... args) {
+        switch (Level.valueOf(level.toUpperCase())) {
             case DEBUG:
                 log.debug(message, args);
                 break;
