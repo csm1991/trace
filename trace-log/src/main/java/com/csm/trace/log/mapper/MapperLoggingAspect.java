@@ -39,18 +39,22 @@ public class MapperLoggingAspect {
 
         long startTime = System.currentTimeMillis();
         try {
-            logUtil.log(logProperties.getMapper().getInputLevel(), "Mapper method {} called with arguments: {}", methodName, maskedArgs);
+            if (logProperties.getMapper().getEnableInputLog()) {
+                logUtil.log(logProperties.getMapper().getInputLevel(), "Mapper method {} called with arguments: {}", methodName, maskedArgs);
+            }
 
             Object result = joinPoint.proceed();
-            
-            // 处理出参集合屏蔽
-            Object maskedResult = ObjectMaskUtils.maskCollections(result, logProperties.getMapper().getOutputCollectionMask());
             long executionTime = System.currentTimeMillis() - startTime;
 
-            logUtil.log(logProperties.getMapper().getExecutionLevel(), "Mapper method {} executed in {}ms. Result: {}", methodName, executionTime, maskedResult);
+            // 处理出参集合屏蔽
+            Object maskedResult = ObjectMaskUtils.maskCollections(result, logProperties.getMapper().getOutputCollectionMask());
+
+            if (logProperties.getMapper().getEnableExecutionLog()) {
+                logUtil.log(logProperties.getMapper().getExecutionLevel(), "Mapper method {} executed in {}ms. Result: {}", methodName, executionTime, maskedResult);
+            }
 
             long threshold = logProperties.getMapper().getThreshold();
-            if (executionTime > threshold) {
+            if (executionTime > threshold && logProperties.getMapper().getEnableTimeoutLog()) {
                 logUtil.log(logProperties.getMapper().getTimeoutLevel(), "Mapper method {} executed in {}ms (exceeds threshold {}ms). Result: {}", methodName, executionTime, threshold, maskedResult);
             }
 

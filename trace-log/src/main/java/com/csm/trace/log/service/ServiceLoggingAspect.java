@@ -43,19 +43,25 @@ public class ServiceLoggingAspect {
 
         long startTime = System.currentTimeMillis();
         try {
-            logUtil.log(logProperties.getService().getInputLevel(), "Method {} called with arguments: {}", methodName, maskedArgs);
+            if (logProperties.getService().getEnableInputLog()) {
+                logUtil.log(logProperties.getService().getInputLevel(), "Method {} called with arguments: {}", methodName, maskedArgs);
+            }
 
             Object result = joinPoint.proceed();
             long executionTime = System.currentTimeMillis() - startTime;
 
             // 处理出参集合屏蔽
             Object maskedResult = ObjectMaskUtils.maskCollections(result, logProperties.getService().getOutputCollectionMask());
-            logUtil.log(logProperties.getService().getExecutionLevel(), "Method {} executed in {}ms. Result: {}", methodName, executionTime, maskedResult);
+
+            if (logProperties.getService().getEnableExecutionLog()) {
+                logUtil.log(logProperties.getService().getExecutionLevel(), "Method {} executed in {}ms. Result: {}", methodName, executionTime, maskedResult);
+            }
 
             long threshold = logProperties.getService().getThreshold();
-            if (executionTime > threshold) {
+            if (executionTime > threshold && logProperties.getService().getEnableTimeoutLog()) {
                 logUtil.log(logProperties.getService().getTimeoutLevel(), "Method {} executed in {}ms (exceeds threshold {}ms). Result: {}", methodName, executionTime, threshold, maskedResult);
             }
+
             return result;
         } catch (Throwable e) {
             long executionTime = System.currentTimeMillis() - startTime;
