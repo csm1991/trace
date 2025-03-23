@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import com.csm.trace.log.util.ObjectMaskUtils;
 
 /**
- * 拦截MyBatis-Plus的SQL执行的切面类
+ * 仓储层方法执行日志切面
  *
  * @author Simon Cai
  * @version 1.0

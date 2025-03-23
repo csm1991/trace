@@ -18,6 +18,16 @@ mvn clean install
 ### 日志配置（trace-log模块）
 ```yaml
 trace.log:
+  controller:
+    threshold: 1000               #执行超时时长，单位ms
+    input-level: INFO             #入参日志的日志级别
+    execution-level: INFO         #执行时长&出参日志的日志级别
+    timeout-level: INFO           #执行超时的日志级别
+    enable-input-level: true      #是否启用入参日志
+    enable-execution-level: true  #是否启用执行时长&出参日志
+    enable-timeout-level: true    #是否启用执行超时的日志
+    input-collection-mask: false   #是否对入参集合类型进行屏蔽（true-屏蔽集合内容，只保留类型信息）
+    output-collection-mask: false  #是否对出参集合类型进行屏蔽（true-屏蔽集合内容，只保留类型信息）
   service:
     threshold: 1000               #执行超时时长，单位ms
     input-level: INFO             #入参日志的日志级别
