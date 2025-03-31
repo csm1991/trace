@@ -1,10 +1,8 @@
 package com.csm.trace.log.config;
 
-import com.csm.trace.log.service.ServiceLoggingAspect;
 import com.csm.trace.log.util.LogUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -27,10 +25,5 @@ public class TraceLogAutoConfiguration {
     public TraceLogAutoConfiguration(LogUtil logUtil, LogProperties logProperties) {
         this.logUtil = logUtil;
         this.logProperties = logProperties;
-    }
-
-    @Bean
-    public ServiceLoggingAspect loggingAspect() {
-        return new ServiceLoggingAspect(logUtil, logProperties);
     }
 }

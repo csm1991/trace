@@ -8,7 +8,6 @@ import com.csm.trace.log.util.LogUtil;
 import com.csm.trace.log.util.ObjectMaskUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 控制器层方法执行日志切面
@@ -30,8 +29,8 @@ public class ControllerLoggingAspect {
         this.logProperties = logProperties;
     }
 
-    @Around("@within(restController) || @annotation(restController)")
-    public Object logControllerExecution(ProceedingJoinPoint joinPoint, RestController restController) throws Throwable {
+    @Around("@within(org.springframework.web.bind.annotation.RestController) || @annotation(org.springframework.web.bind.annotation.RestController)")
+    public Object logControllerExecution(ProceedingJoinPoint joinPoint) throws Throwable {
         String methodName = joinPoint.getSignature().toShortString();
         Object[] args = joinPoint.getArgs();
 
