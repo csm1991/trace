@@ -1,8 +1,9 @@
-package com.csm.trace.rocketmq;
+package com.csm.trace.rocketmq.hook;
 
 import com.csm.trace.core.TraceIdContext;
 import org.apache.rocketmq.client.hook.SendMessageContext;
 import org.apache.rocketmq.client.hook.SendMessageHook;
+import org.springframework.stereotype.Component;
 
 /**
  * 发送消息拦截器，用于将traceId添加到消息头中
@@ -11,7 +12,8 @@ import org.apache.rocketmq.client.hook.SendMessageHook;
  * @version 1.0
  * @since 2025-03-14
  */
-public class SendMessageTraceHook implements SendMessageHook {
+@Component
+public class ProducerTraceHook implements SendMessageHook {
 
     @Override
     public String hookName() {
