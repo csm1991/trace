@@ -35,6 +35,5 @@ public class ConsumerTraceHook implements ConsumeMessageHook {
 
     @Override
     public void consumeMessageAfter(ConsumeMessageContext context) {
-        TraceIdContext.clear();
     }
 }

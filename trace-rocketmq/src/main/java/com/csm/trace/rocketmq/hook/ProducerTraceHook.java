@@ -30,6 +30,5 @@ public class ProducerTraceHook implements SendMessageHook {
 
     @Override
     public void sendMessageAfter(SendMessageContext sendMessageContext) {
-        TraceIdContext.clear();
     }
 }
