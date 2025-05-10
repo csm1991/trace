@@ -14,6 +14,12 @@ mvn clean install
 如果有使用maven仓库私服，则通过mvn clean deploy命令导入到私服后，再引入即可。
 ```
 
+```bash
+本组件仅通过MDC设置traceId，需要在日志中展示该traceId需要额外修改日志输出格式配置，示例如下：
+logging.pattern.console=%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} [%X{traceId}] - %msg%n
+格式支持自定义，只需要包含[%X{traceId}]即可。
+```
+
 ## 配置说明
 ### 日志配置（trace-log模块）
 ```yaml
